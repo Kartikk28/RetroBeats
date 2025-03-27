@@ -10,55 +10,46 @@ function SearchSection() {
     if (!query) return;
     setLoading(true);
 
+    const token = localStorage.getItem('spotify_token');
+    if (!token) {
+      alert('Please connect to Spotify first.');
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await fetch(
-        `https://musicbrainz.org/ws/2/recording/?query=${encodeURIComponent(query)}&fmt=json&limit=50`
-      );
-      const data = await response.json();
-      console.log('Fetched data from MusicBrainz:', data);
-
-      const q = query.toLowerCase();
-
-      const filtered = data.recordings.filter(track => {
-        const title = track.title?.toLowerCase() || '';
-        const artist = track['artist-credit']?.[0]?.name?.toLowerCase() || '';
-        return (
-          title.includes(q) ||
-          artist.includes(q) ||
-          artist === q
-        );
-      });
-
-      // Remove duplicates by track title + artist combo
-      const uniqueTracks = [];
-      const seen = new Set();
-
-      for (const track of filtered) {
-        const key = `${track.title}-${track['artist-credit']?.[0]?.name}`;
-        if (!seen.has(key)) {
-          seen.add(key);
-
-          const releaseId = track.releases?.[0]?.id;
-          const releaseDate = track.releases?.[0]?.date || 'Unknown';
-
-          uniqueTracks.push({
-            name: track.title,
-            artist: track['artist-credit']?.[0]?.name || 'Unknown Artist',
-            year: releaseDate,
-            image: [
-              {}, {}, {
-                '#text': releaseId
-                  ? `https://coverartarchive.org/release/${releaseId}/front`
-                  : '/default.jpg'
-              }
-            ]
-          });
+        `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=12`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
+      );
+
+      const data = await response.json();
+
+      // Log the full track object so you can inspect preview_url
+      console.log('Fetched tracks:', data.tracks?.items);
+
+      if (!data.tracks?.items) {
+        alert('No tracks found or token might have expired.');
+        setLoading(false);
+        return;
       }
 
-      setTracks(uniqueTracks.slice(0, 12));
+      const results = data.tracks.items.map(track => ({
+        name: track.name,
+        artist: track.artists[0]?.name || 'Unknown Artist',
+        year: track.album.release_date?.split('-')[0] || 'Unknown',
+        image: track.album.images[0]?.url || '/default.jpg',
+        audio: track.preview_url // this might be null
+      }));
+
+      setTracks(results);
     } catch (error) {
-      console.error('Error fetching tracks from MusicBrainz:', error);
+      console.error('Error fetching from Spotify:', error);
+      alert('Spotify search failed. Try reconnecting.');
     }
 
     setLoading(false);
@@ -78,7 +69,7 @@ function SearchSection() {
         />
         <button
           onClick={handleSearch}
-          className="bg-pink-500 hover:bg-pink-600 px-6 py-2 rounded-full font-semibold transition"
+          className="bg-green-500 hover:bg-green-600 px-6 py-2 rounded-full font-semibold transition"
         >
           Search
         </button>
@@ -96,10 +87,8 @@ function SearchSection() {
             title={track.name}
             artist={track.artist}
             year={track.year}
-            image={
-              track.image?.[2]?.['#text'] ||
-              'https://via.placeholder.com/300x300.png?text=No+Cover'
-            }
+            image={track.image}
+            audio={track.audio}
           />
         ))}
       </div>
