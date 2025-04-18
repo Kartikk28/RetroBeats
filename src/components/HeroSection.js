@@ -10,7 +10,7 @@ function HeroSection() {
 
   const handleSearch = async () => {
     const trimmed = query.trim();
-    const term = selectedGenre || trimmed;
+    const term = trimmed || selectedGenre;
   
     if (!term) {
       setTracks([]);
