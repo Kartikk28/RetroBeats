@@ -1,4 +1,3 @@
-// src/pages/Callback.js
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,15 +5,18 @@ function Callback() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const hash = window.location.hash;
-    let token = null;
+    const queryParams = new URLSearchParams(window.location.search);
+    const accessToken = queryParams.get('access_token');
+    const refreshToken = queryParams.get('refresh_token');
+    const expiresIn = queryParams.get('expires_in');
 
-    if (hash) {
-      token = new URLSearchParams(hash.substring(1)).get('access_token');
-      if (token) {
-        localStorage.setItem('spotify_token', token);
-        navigate('/');
-      }
+    if (accessToken) {
+      localStorage.setItem('spotify_token', accessToken);
+      localStorage.setItem('spotify_refresh_token', refreshToken);
+      localStorage.setItem('spotify_token_expiry', Date.now() + Number(expiresIn) * 1000);
+      navigate('/');
+    } else {
+      alert("Authentication failed. Try again.");
     }
   }, [navigate]);
 

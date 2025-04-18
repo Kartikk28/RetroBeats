@@ -1,96 +1,49 @@
-import { useState } from 'react';
-import TrackCard from './TrackCard';
-
 function SearchSection() {
-  const [query, setQuery] = useState('');
-  const [tracks, setTracks] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const handleSearch = async () => {
-    if (!query) return;
-    setLoading(true);
-
-    const token = localStorage.getItem('spotify_token');
-    if (!token) {
-      alert('Please connect to Spotify first.');
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=12`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-
-      const data = await response.json();
-
-      // Log the full track object so you can inspect preview_url
-      console.log('Fetched tracks:', data.tracks?.items);
-
-      if (!data.tracks?.items) {
-        alert('No tracks found or token might have expired.');
-        setLoading(false);
-        return;
-      }
-
-      const results = data.tracks.items.map(track => ({
-        name: track.name,
-        artist: track.artists[0]?.name || 'Unknown Artist',
-        year: track.album.release_date?.split('-')[0] || 'Unknown',
-        image: track.album.images[0]?.url || '/default.jpg',
-        audio: track.preview_url // this might be null
-      }));
-
-      setTracks(results);
-    } catch (error) {
-      console.error('Error fetching from Spotify:', error);
-      alert('Spotify search failed. Try reconnecting.');
-    }
-
-    setLoading(false);
-  };
+  const legends = [
+    { name: 'Elvis Presley', image: '/elvis.webp' },
+    { name: 'Aretha Franklin', image: '/aretha.png' },
+    { name: 'The Beatles', image: '/thebeatles.jpg' },
+    { name: 'Frank Sinatra', image: '/frank.jpg' },
+    { name: 'Marvin Gaye', image: '/marvingaye.jpg' },
+    { name: 'Ray Charles', image: '/raycharles.avif' },
+    { name: 'Patsy Cline', image: '/patsycline.jpg' },
+    { name: 'James Brown', image: '/jamesbrown.jpg' },
+    { name: 'Johnny Cash', image: '/johnnycash.jpg' },
+  ];
 
   return (
-    <div className="w-full bg-black text-white py-12 flex flex-col items-center">
-      <h3 className="text-2xl font-semibold mb-6">Search by Artist, Song, or Year</h3>
+    <div
+      className="relative w-full text-white py-20 overflow-hidden px-6 bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: "url('/retrosearch.png')" }}
+    >
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-black bg-opacity-0 z-0"></div>
 
-      <div className="flex flex-col md:flex-row items-center gap-4">
-        <input
-          type="text"
-          placeholder="e.g. Elvis, 1984, Beatles"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="px-4 py-2 rounded-full text-black w-72 md:w-96"
-        />
-        <button
-          onClick={handleSearch}
-          className="bg-green-500 hover:bg-green-600 px-6 py-2 rounded-full font-semibold transition"
-        >
-          Search
-        </button>
-      </div>
+      <div className="relative z-10">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-retro text-pink-200 mb-4 drop-shadow-xl">Hall of Fame Legends</h2>
+          <p className="text-gray-300 font-body max-w-2xl mx-auto">
+            Meet the voices that shaped the golden era of music. From soulful ballads to rock & roll anthems — these legends defined generations.
+          </p>
+        </div>
 
-      {loading && <p className="mt-6 text-gray-400">Loading tracks...</p>}
-      {!loading && tracks.length === 0 && (
-        <p className="mt-6 text-gray-500">No results found. Try another artist or song.</p>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10 px-6">
-        {tracks.map((track, index) => (
-          <TrackCard
-            key={index}
-            title={track.name}
-            artist={track.artist}
-            year={track.year}
-            image={track.image}
-            audio={track.audio}
-          />
-        ))}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 justify-items-center">
+          {legends.map((artist, index) => (
+            <div
+              key={index}
+              className="flex flex-col items-center bg-zinc-800 rounded-xl shadow-md p-4 hover:scale-105 transition transform duration-300"
+            >
+              <img
+                src={artist.image}
+                alt={artist.name}
+                className="w-28 h-28 md:w-32 md:h-32 rounded-full object-cover border-4 border-pink-300 shadow-inner"
+              />
+              <p className="mt-4 text-sm md:text-base font-semibold font-body text-yellow-100 text-center">
+                {artist.name}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
