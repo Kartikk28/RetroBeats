@@ -10,25 +10,19 @@ function HeroSection() {
 
   const handleSearch = async () => {
     const trimmed = query.trim();
-
-    if (!trimmed && !selectedGenre) {
+    const term = selectedGenre || trimmed;
+  
+    if (!term) {
       setTracks([]);
       return;
     }
-
+  
     setLoading(true);
-    let apiUrl = '';
-
-    if (selectedGenre) {
-      apiUrl = `https://itunes.apple.com/search?term=${selectedGenre}&media=music&limit=12`;
-    } else {
-      apiUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(trimmed)}&media=music&limit=12`;
-    }
-
+  
     try {
-      const response = await fetch(apiUrl);
+      const response = await fetch(`/api/itunes?term=${encodeURIComponent(term)}`);
       const data = await response.json();
-
+  
       const results = data.results.map(track => ({
         name: track.trackName,
         artist: track.artistName,
@@ -36,14 +30,15 @@ function HeroSection() {
         image: track.artworkUrl100?.replace('100x100', '300x300') || '/default.jpg',
         audio: track.previewUrl || null
       }));
-
+  
       setTracks(results);
     } catch (error) {
-      console.error('❌ Error fetching from iTunes:', error);
+      console.error('Error fetching from proxy API:', error);
     }
-
+  
     setLoading(false);
   };
+  
 
   const handleClear = () => {
     setQuery('');
