@@ -11,7 +11,7 @@ body {
   padding: 0;
 }
 
-/* Floating elements animation */
+/* 🎵 Floating elements animation */
 @keyframes float {
   0%, 100% {
     transform: translateY(0);
@@ -24,7 +24,7 @@ body {
   animation: float 6s ease-in-out infinite;
 }
 
-/* Slower floating effect */
+/* 🎵 Slower floating effect */
 @keyframes float-slow {
   0%, 100% {
     transform: translateY(0);
@@ -37,7 +37,7 @@ body {
   animation: float-slow 12s ease-in-out infinite;
 }
 
-/* Custom pulse for logo or glow */
+/* 🌟 Custom pulse for logos or highlights */
 @keyframes pulse-slow {
   0%, 100% {
     opacity: 1;
@@ -54,7 +54,98 @@ body {
 
 /* Optional stagger delays */
 .delay-0 { animation-delay: 0s; }
+.delay-200 { animation-delay: 0.2s; }
 .delay-500 { animation-delay: 0.5s; }
 .delay-700 { animation-delay: 0.7s; }
 .delay-1000 { animation-delay: 1s; }
-.delay-200 { animation-delay: 0.2s; }
+
+/* 🌈 Neon Glow Effect */
+@keyframes neon-flicker {
+  0%, 100% { opacity: 1; }
+  45% { opacity: 0.6; }
+  50% { opacity: 0.3; }
+  55% { opacity: 0.6; }
+}
+.neon-glow {
+  text-shadow:
+    0 0 5px #ff4f81,
+    0 0 10px #ff4f81,
+    0 0 20px #ff4f81,
+    0 0 40px #ff4f81;
+  animation: neon-flicker 2.5s infinite alternate;
+}
+
+/* 💿 Slow Vinyl Spin Animation */
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+.neon-glow:hover {
+  animation: neon-pulse 2s infinite alternate;
+}
+
+
+.animate-spin-slow {
+  animation: spin-slow 6s linear infinite;
+}
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+.animate-float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+
+/* 🪩 Retro Button Styling */
+.retro-btn {
+  background-color: #ff4f81;
+  border: 2px solid #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 0 10px #ff4f81, 0 0 20px #ff4f81, 0 0 30px #ff4f81;
+  transition: all 0.3s ease;
+}
+
+.retro-btn:hover {
+  background-color: #e04070;
+  transform: scale(1.05);
+  box-shadow: 0 0 12px #ff69b4, 0 0 25px #ff69b4, 0 0 40px #ff69b4;
+}
+
+.neon-border {
+  box-shadow: 0 0 8px #ff4f81, 0 0 12px #ff4f81;
+}
+.neon-text-glow {
+  text-shadow:
+    0 0 5px #ff4f81,
+    0 0 10px #ff4f81,
+    0 0 15px #ff4f81,
+    0 0 20px #ff4f81;
+}
+
+@keyframes neon-pulse {
+  0%, 100% {
+    box-shadow: 0 0 5px #ff4f81, 0 0 10px #ff4f81, 0 0 15px #ff4f81, 0 0 20px #ff4f81;
+  }
+  50% {
+    box-shadow: 0 0 2px #ff4f81, 0 0 6px #ff4f81, 0 0 10px #ff4f81, 0 0 14px #ff4f81;
+  }
+}
+
+
+.retro-btn:hover {
+  transform: translateY(2px);
+  box-shadow: none;
+}

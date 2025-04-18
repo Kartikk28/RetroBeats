@@ -11,18 +11,18 @@ function HeroSection() {
   const handleSearch = async () => {
     const trimmed = query.trim();
     const term = trimmed || selectedGenre;
-  
+
     if (!term) {
       setTracks([]);
       return;
     }
-  
+
     setLoading(true);
-  
+
     try {
       const response = await fetch(`/api/itunes?term=${encodeURIComponent(term)}`);
       const data = await response.json();
-  
+
       const results = data.results.map(track => ({
         name: track.trackName,
         artist: track.artistName,
@@ -30,15 +30,14 @@ function HeroSection() {
         image: track.artworkUrl100?.replace('100x100', '300x300') || '/default.jpg',
         audio: track.previewUrl || null
       }));
-  
+
       setTracks(results);
     } catch (error) {
       console.error('Error fetching from proxy API:', error);
     }
-  
+
     setLoading(false);
   };
-  
 
   const handleClear = () => {
     setQuery('');
@@ -51,18 +50,29 @@ function HeroSection() {
       className="w-full min-h-screen bg-cover bg-center bg-no-repeat relative flex flex-col items-center justify-center text-white px-4"
       style={{ backgroundImage: `url('/bg.jpeg')` }}
     >
-      <div className="absolute inset-0 bg-black bg-opacity-10 z-0"></div>
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-black bg-opacity-20 z-0"></div>
+{/* 🎶 Floating Vinyl Left */}
+<div className="absolute top-24 left-[-80px] animate-float-slow pointer-events-none opacity-20">
+  <img src="/vinyl.png" alt="floating vinyl" className="w-[150px] rotate-[15deg]" />
+</div>
 
+{/* 🎶 Floating Vinyl Right */}
+<div className="absolute bottom-16 right-[-80px] animate-float-slow pointer-events-none opacity-1">
+  <img src="/vinyl.png" alt="floating vinyl" className="w-[130px] rotate-[-15deg]" />
+</div>
+
+      {/* Main Content */}
       <div className="z-10 text-center max-w-3xl">
-      <h1 className="text-4xl md:text-6xl font-retro text-[#f9f1e9] drop-shadow-xl mb-4 tracking-wider relative z-10">
-
-
-          Welcome to the Sound of the 1900s 
+        <h1 className="text-4xl md:text-6xl font-retro text-pink-300 neon-glow mb-4 tracking-wider relative z-10">
+          Welcome to the Sound of the 1900s
         </h1>
+
         <p className="text-md md:text-lg text-[#fffaf0] font-retro mb-6 tracking-wide drop-shadow-[2px_2px_1px_rgba(0,0,0,0.4)]">
           From jukebox hits to golden vinyl grooves — rediscover music that defined generations.
         </p>
 
+        {/* Search Inputs */}
         <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-6">
           <input
             type="text"
@@ -91,13 +101,13 @@ function HeroSection() {
               </option>
             ))}
           </select>
-
           <button
-            onClick={handleSearch}
-            className="bg-[#ff4f81] hover:bg-[#e04070] text-white font-retro px-6 py-3 rounded-[10px] shadow-[4px_4px_0px_#3b2f2f] border-2 border-[#3b2f2f] transition-all duration-200 hover:translate-y-[2px] hover:shadow-none"
-          >
-            Search
-          </button>
+  onClick={handleSearch}
+  className="retro-btn text-white font-retro px-1 py-1 rounded-[10px] neon-border"
+>
+  Search
+</button>
+
 
           <button
             onClick={handleClear}
@@ -107,11 +117,13 @@ function HeroSection() {
           </button>
         </div>
 
+        {/* Feedback Text */}
         {loading && <p className="mt-6 text-gray-300 font-body">Loading tracks...</p>}
         {!loading && tracks.length === 0 && (
           <p className="mt-6 text-gray-300 font-body">No results found. Try a different search or genre.</p>
         )}
 
+        {/* Track Results */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10 px-6">
           {tracks.map((track, index) => (
             <TrackCard
@@ -124,6 +136,15 @@ function HeroSection() {
             />
           ))}
         </div>
+        {/* 🎵 Floating Retro Background Icons */}
+<div className="absolute inset-0 overflow-hidden z-0 pointer-events-none">
+  <div className="absolute text-pink-300 text-2xl animate-float delay-0 left-[10%] top-[30%] opacity-20">💿</div>
+  <div className="absolute text-yellow-200 text-3xl animate-float delay-500 left-[80%] top-[40%] opacity-25">🎶</div>
+  <div className="absolute text-green-300 text-xl animate-float delay-1000 left-[50%] top-[75%] opacity-10">🎷</div>
+  <div className="absolute text-blue-200 text-4xl animate-float delay-700 left-[20%] top-[60%] opacity-15">📻</div>
+</div>
+
+
       </div>
     </div>
   );
