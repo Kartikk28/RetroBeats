@@ -52,15 +52,7 @@ function HeroSection() {
     >
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black bg-opacity-20 z-0"></div>
-{/* 🎶 Floating Vinyl Left */}
-<div className="absolute top-24 left-[-80px] animate-float-slow pointer-events-none opacity-20">
-  <img src="/vinyl.png" alt="floating vinyl" className="w-[150px] rotate-[15deg]" />
-</div>
 
-{/* 🎶 Floating Vinyl Right */}
-<div className="absolute bottom-16 right-[-80px] animate-float-slow pointer-events-none opacity-1">
-  <img src="/vinyl.png" alt="floating vinyl" className="w-[130px] rotate-[-15deg]" />
-</div>
 
       {/* Main Content */}
       <div className="z-10 text-center max-w-3xl">
